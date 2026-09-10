@@ -34,7 +34,7 @@ interface FormBuilderState {
   removeElement: (elementId: string) => void;
 
   moveElement: (fromIndex: number, toIndex: number) => void;
-
+  duplicateElement: (elementId: string) => void;
   // Selection
   selectElement: (elementId: string | null) => void;
 }
@@ -324,6 +324,37 @@ export const useFormBuilderStore = create<FormBuilderState>()(
             },
           },
         })),
+
+      duplicateElement: (elementId) =>
+        set((state) => {
+          const index = state.form.formElements.findIndex(
+            (element) => element.id === elementId,
+          );
+
+          if (index === -1) {
+            return state;
+          }
+
+          const original = state.form.formElements[index];
+
+          const duplicate = {
+            ...structuredClone(original),
+            id: crypto.randomUUID(),
+            name: `${original.name}_copy`,
+          };
+
+          const formElements = [...state.form.formElements];
+
+          formElements.splice(index + 1, 0, duplicate);
+
+          return {
+            form: {
+              ...state.form,
+              formElements,
+            },
+            selectedElementId: duplicate.id,
+          };
+        }),
 
       resetForm: () =>
         set({

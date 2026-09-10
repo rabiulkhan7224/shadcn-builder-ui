@@ -73,6 +73,8 @@ export const OTPInputSchema = CommonFieldSchema.extend({
   children: z.unknown().optional(),
 });
 
+export type OTPInput = z.infer<typeof OTPInputSchema>;
+
 export const TextareaSchema = CommonFieldSchema.extend({
   fieldType: z.literal("Textarea"),
   rows: z.number().int().min(1).max(50).default(4),
