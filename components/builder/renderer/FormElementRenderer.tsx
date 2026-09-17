@@ -3,7 +3,6 @@
 import type { FormElement } from "@/lib/schema/form-builder.schema";
 
 import OTPField from "./fields/otp-field";
-
 import { InputRenderer } from "./fields/input-renderer";
 import PasswordField from "./fields/password-renderer";
 import TextareaField from "./fields/textarea-renderer";
@@ -11,15 +10,22 @@ import CheckboxField from "./fields/checkbox-renderer";
 import RadioGroupField from "./fields/radio-group-renderer";
 import ToggleGroupField from "./fields/toggle-group-renderer";
 import SwitchField from "./fields/switch-renderer";
+import SliderField from "./fields/slider-renderer";
 import SelectField from "./fields/select-field";
+import MultiSelectField from "./fields/multi-select-field";
+import DatePickerField from "./fields/date-picker-renderer";
+import H1Field from "./fields/h1-field";
+import H2Field from "./fields/h2-field";
+import H3Field from "./fields/h3-field";
+import DividerField from "./fields/divider-field";
+import DescriptionField from "./fields/description-field";
+import LegendField from "./fields/legend-field";
 
 interface FormElementRendererProps {
   element: FormElement;
 }
 
-export default function FormElementRenderer({
-  element,
-}: FormElementRendererProps) {
+export function FormElementRenderer({ element }: FormElementRendererProps) {
   switch (element.fieldType) {
     case "Input":
       return <InputRenderer element={element} />;
@@ -45,35 +51,35 @@ export default function FormElementRenderer({
     case "Switch":
       return <SwitchField element={element} />;
 
-    // case "Slider":
-    //   return <SliderField element={element} />;
+    case "Slider":
+      return <SliderField element={element} />;
 
     case "Select":
       return <SelectField element={element} />;
 
-    // case "MultiSelect":
-    //   return <MultiSelectField element={element} />;
+    case "MultiSelect":
+      return <MultiSelectField element={element} />;
 
-    // case "DatePicker":
-    //   return <DatePickerField element={element} />;
+    case "DatePicker":
+      return <DatePickerField element={element} />;
 
-    // case "H1":
-    //   return <H1Field element={element} />;
+    case "H1":
+      return <H1Field element={element} />;
 
-    // case "H2":
-    //   return <H2Field element={element} />;
+    case "H2":
+      return <H2Field element={element} />;
 
-    // case "H3":
-    //   return <H3Field element={element} />;
+    case "H3":
+      return <H3Field element={element} />;
 
-    // case "Separator":
-    //   return <DividerField element={element} />;
+    case "Separator":
+      return <DividerField element={element} />;
 
-    // case "FieldDescription":
-    //   return <DescriptionField element={element} />;
+    case "FieldDescription":
+      return <DescriptionField element={element} />;
 
-    // case "FieldLegend":
-    //   return <LegendField element={element} />;
+    case "FieldLegend":
+      return <LegendField element={element} />;
 
     case "FormArray":
       return <div>{/* FormArray renderer will be added separately */}</div>;
@@ -82,3 +88,5 @@ export default function FormElementRenderer({
       return null;
   }
 }
+
+export default FormElementRenderer;

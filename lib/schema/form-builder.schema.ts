@@ -140,34 +140,42 @@ const StaticBaseSchema = z.object({
   id: z.string(),
   name: z.string(),
   static: z.literal(true),
+  className: z.string().optional(),
 });
 export const H1Schema = StaticBaseSchema.extend({
   fieldType: z.literal("H1"),
   content: z.string(),
 });
+export type H1 = z.infer<typeof H1Schema>;
 
 export const H2Schema = StaticBaseSchema.extend({
   fieldType: z.literal("H2"),
   content: z.string(),
 });
+export type H2 = z.infer<typeof H2Schema>;
 
 export const H3Schema = StaticBaseSchema.extend({
   fieldType: z.literal("H3"),
   content: z.string(),
 });
+export type H3 = z.infer<typeof H3Schema>;
+
 export const DividerSchema = StaticBaseSchema.extend({
   fieldType: z.literal("Separator"),
 });
+export type Divider = z.infer<typeof DividerSchema>;
 
 export const DescriptionSchema = StaticBaseSchema.extend({
   fieldType: z.literal("FieldDescription"),
   content: z.string(),
 });
+export type Description = z.infer<typeof DescriptionSchema>;
 
 export const LegendSchema = StaticBaseSchema.extend({
   fieldType: z.literal("FieldLegend"),
   content: z.string(),
 });
+export type Legend = z.infer<typeof LegendSchema>;
 // Recursive Form Elements
 
 // Form Array

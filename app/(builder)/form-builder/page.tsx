@@ -1,5 +1,6 @@
 "use client";
 
+import { FieldEditor } from "@/components/builder/FieldEditor";
 import { FieldsPanel } from "@/components/builder/fields-panel";
 import { FormPreview } from "@/components/builder/form-preview";
 import {
@@ -28,7 +29,7 @@ const FormBuilderLayoutPage = () => {
         <ResizableHandle withHandle className="text-2xl" />
 
         <ResizablePanel defaultSize="20%">
-          {/* <FieldEditor /> */}
+          <FieldEditor />
           <h1>FieldEditor</h1>
         </ResizablePanel>
       </ResizablePanelGroup>

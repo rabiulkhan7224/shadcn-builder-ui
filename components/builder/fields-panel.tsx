@@ -1,14 +1,18 @@
 "use client";
 
 import {
+  AlignLeft,
+  Bookmark,
   CalendarDays,
   Check,
   CircleDot,
-  Hash,
+  Heading1,
+  Heading2,
+  Heading3,
   KeyRound,
   List,
   ListChecks,
-  MousePointer2,
+  Minus,
   SlidersHorizontal,
   Text,
   ToggleLeft,
@@ -20,7 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useFormBuilderStore } from "@/app/store/form-builder.store";
 
-const fieldDefinitions = [
+const formFieldDefinitions = [
   {
     fieldType: "Input",
     label: "Input",
@@ -78,12 +82,47 @@ const fieldDefinitions = [
   },
 ] as const;
 
+const staticFieldDefinitions = [
+  {
+    fieldType: "H1",
+    label: "Heading 1",
+    icon: Heading1,
+  },
+  {
+    fieldType: "H2",
+    label: "Heading 2",
+    icon: Heading2,
+  },
+  {
+    fieldType: "H3",
+    label: "Heading 3",
+    icon: Heading3,
+  },
+  {
+    fieldType: "Separator",
+    label: "Separator",
+    icon: Minus,
+  },
+  {
+    fieldType: "FieldDescription",
+    label: "Description",
+    icon: AlignLeft,
+  },
+  {
+    fieldType: "FieldLegend",
+    label: "Legend",
+    icon: Bookmark,
+  },
+] as const;
+
+type AllFieldType =
+  | (typeof formFieldDefinitions)[number]["fieldType"]
+  | (typeof staticFieldDefinitions)[number]["fieldType"];
+
 export function FieldsPanel() {
   const addElement = useFormBuilderStore((state) => state.addElement);
 
-  const handleAddField = (
-    fieldType: (typeof fieldDefinitions)[number]["fieldType"],
-  ) => {
+  const handleAddField = (fieldType: AllFieldType) => {
     const id = crypto.randomUUID();
 
     switch (fieldType) {
@@ -140,7 +179,7 @@ export function FieldsPanel() {
             },
             {
               value: "option-2",
-              label: "Option-2",
+              label: "Option 2",
               disabled: false,
             },
           ],
@@ -160,6 +199,16 @@ export function FieldsPanel() {
             {
               value: "option-1",
               label: "Option 1",
+              disabled: false,
+            },
+            {
+              value: "option-2",
+              label: "Option 2",
+              disabled: false,
+            },
+            {
+              value: "option-3",
+              label: "Option 3",
               disabled: false,
             },
           ],
@@ -265,6 +314,65 @@ export function FieldsPanel() {
           required: false,
         });
         break;
+
+      case "H1":
+        addElement({
+          id,
+          name: "h1",
+          fieldType: "H1",
+          content: "Heading 1",
+          static: true,
+        });
+        break;
+
+      case "H2":
+        addElement({
+          id,
+          name: "h2",
+          fieldType: "H2",
+          content: "Heading 2",
+          static: true,
+        });
+        break;
+
+      case "H3":
+        addElement({
+          id,
+          name: "h3",
+          fieldType: "H3",
+          content: "Heading 3",
+          static: true,
+        });
+        break;
+
+      case "Separator":
+        addElement({
+          id,
+          name: "separator",
+          fieldType: "Separator",
+          static: true,
+        });
+        break;
+
+      case "FieldDescription":
+        addElement({
+          id,
+          name: "description",
+          fieldType: "FieldDescription",
+          content: "This is a helpful description for this section of the form.",
+          static: true,
+        });
+        break;
+
+      case "FieldLegend":
+        addElement({
+          id,
+          name: "legend",
+          fieldType: "FieldLegend",
+          content: "Section Legend",
+          static: true,
+        });
+        break;
     }
   };
 
@@ -272,7 +380,6 @@ export function FieldsPanel() {
     <div className="flex h-full flex-col">
       <div className="space-y-1 p-4">
         <h2 className="text-sm font-semibold">Fields</h2>
-
         <p className="text-xs text-muted-foreground">
           Select a field to add it to your form.
         </p>
@@ -281,24 +388,54 @@ export function FieldsPanel() {
       <Separator />
 
       <ScrollArea className="flex-1">
-        <div className="grid gap-1 p-3">
-          {fieldDefinitions.map((field) => {
-            const Icon = field.icon;
+        <div className="space-y-4 p-3">
+          <div>
+            <span className="px-3 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+              Form Elements
+            </span>
+            <div className="mt-1 grid gap-1">
+              {formFieldDefinitions.map((field) => {
+                const Icon = field.icon;
+                return (
+                  <Button
+                    key={field.fieldType}
+                    type="button"
+                    variant="ghost"
+                    className="h-9 justify-start gap-3 px-3 text-xs"
+                    onClick={() => handleAddField(field.fieldType)}
+                  >
+                    <Icon className="size-4 text-muted-foreground" />
+                    <span>{field.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
 
-            return (
-              <Button
-                key={field.fieldType}
-                type="button"
-                variant="ghost"
-                className="h-10 justify-start gap-3 px-3"
-                onClick={() => handleAddField(field.fieldType)}
-              >
-                <Icon className="size-4 text-muted-foreground" />
+          <Separator />
 
-                <span>{field.label}</span>
-              </Button>
-            );
-          })}
+          <div>
+            <span className="px-3 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+              Typography & Layout
+            </span>
+            <div className="mt-1 grid gap-1">
+              {staticFieldDefinitions.map((field) => {
+                const Icon = field.icon;
+                return (
+                  <Button
+                    key={field.fieldType}
+                    type="button"
+                    variant="ghost"
+                    className="h-9 justify-start gap-3 px-3 text-xs"
+                    onClick={() => handleAddField(field.fieldType)}
+                  >
+                    <Icon className="size-4 text-muted-foreground" />
+                    <span>{field.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </ScrollArea>
     </div>
