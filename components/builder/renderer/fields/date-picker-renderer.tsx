@@ -31,7 +31,7 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
   }, [element.defaultValue]);
 
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
-    initialDate
+    initialDate,
   );
 
   const formatPattern = element.format || "PPP";
@@ -46,16 +46,23 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
   }, [selectedDate, formatPattern]);
 
   const disabledDates = React.useMemo(() => {
-    const matchers: Array<{ before?: Date; after?: Date }> = [];
-    if (element.minDate) {
-      const min = new Date(element.minDate);
-      if (!isNaN(min.getTime())) matchers.push({ before: min });
-    }
-    if (element.maxDate) {
-      const max = new Date(element.maxDate);
-      if (!isNaN(max.getTime())) matchers.push({ after: max });
-    }
-    return matchers.length > 0 ? matchers : undefined;
+    return (date: Date) => {
+      if (element.minDate) {
+        const min = new Date(element.minDate);
+        if (!isNaN(min.getTime()) && date < min) {
+          return true;
+        }
+      }
+
+      if (element.maxDate) {
+        const max = new Date(element.maxDate);
+        if (!isNaN(max.getTime()) && date > max) {
+          return true;
+        }
+      }
+
+      return false;
+    };
   }, [element.minDate, element.maxDate]);
 
   const handleSelectDate = (date: Date | undefined) => {
@@ -74,7 +81,9 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
       {element.label && (
         <FieldLabel htmlFor={element.id}>
           {element.label}
-          {element.required && <span className="text-destructive ml-0.5">*</span>}
+          {element.required && (
+            <span className="text-destructive ml-0.5">*</span>
+          )}
         </FieldLabel>
       )}
 
@@ -88,7 +97,7 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
             className={cn(
               "w-full justify-between text-left font-normal h-9 px-3",
               !selectedDate && "text-muted-foreground",
-              element.disabled && "cursor-not-allowed opacity-50"
+              element.disabled && "cursor-not-allowed opacity-50",
             )}
           >
             <div className="flex items-center gap-2 truncate">
@@ -103,7 +112,10 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
                 role="button"
                 tabIndex={0}
                 onClick={handleClear}
-                onKeyDown={(e) => e.key === "Enter" && handleClear(e as unknown as React.MouseEvent)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" &&
+                  handleClear(e as unknown as React.MouseEvent)
+                }
                 className="rounded-full p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground"
                 aria-label="Clear date"
               >
@@ -119,7 +131,6 @@ export function DatePickerField({ element }: DatePickerFieldProps) {
             selected={selectedDate}
             onSelect={handleSelectDate}
             disabled={disabledDates}
-            initialFocus
           />
         </PopoverContent>
       </Popover>

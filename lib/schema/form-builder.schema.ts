@@ -263,12 +263,26 @@ export type FormStep = z.infer<typeof FormStepSchema>;
 //   | FormArray;
 export const FormElementsSchema = z.array(FormElementOrListSchema);
 export type FormElements = z.infer<typeof FormElementsSchema>;
+
+export const FormSubmitSchema = z.object({
+  label: z.string().default("Submit"),
+  variant: z
+    .enum(["default", "secondary", "outline", "ghost", "destructive"])
+    .default("default"),
+  disabled: z.boolean().default(false),
+  loadingLabel: z.string().default("Submitting..."),
+  className: z.string().optional(),
+});
 // Unified Form Builder Schema
 export const FormBuilderSchema = z.object({
   id: z.string(),
   formName: z.string().default("draft"),
   schemaName: z.string().default("draftFormSchema"),
   isMultiStep: z.boolean().default(false),
+  submit: FormSubmitSchema.default({}),
+  formLibrary: z
+    .enum(["react-hook-form", "tanstack-form"])
+    .default("react-hook-form"),
   steps: z.array(FormStepSchema).default([]),
   formElements: FormElementsSchema.default([]),
   settings: FormBuilderSettingsSchema.default({}),

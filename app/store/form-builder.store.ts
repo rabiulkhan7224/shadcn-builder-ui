@@ -3,6 +3,7 @@ import {
   FormBuilderSettings,
   FormElement,
   FormElements,
+  FormSubmitSchema,
 } from "@/lib/schema/form-builder.schema";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -44,6 +45,8 @@ const createDefaultForm = (): FormBuilder => ({
   formName: "draft",
   schemaName: "draftFormSchema",
   isMultiStep: false,
+  submit: FormSubmitSchema.parse({}),
+  formLibrary: "react-hook-form",
   formElements: [],
   steps: [],
   settings: {

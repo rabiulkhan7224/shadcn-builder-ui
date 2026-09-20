@@ -23,14 +23,54 @@ import { useFormBuilderStore } from "@/app/store/form-builder.store";
 import type { FormElement } from "@/lib/schema/form-builder.schema";
 import { BuilderElement } from "./builder-element";
 import FormElementRenderer from "./renderer/FormElementRenderer";
+import { Edit } from "lucide-react";
 
 export function FormPreview() {
   const form = useFormBuilderStore((state) => state.form);
   const moveElement = useFormBuilderStore((state) => state.moveElement);
   const selectElement = useFormBuilderStore((state) => state.selectElement);
+  const updateForm = useFormBuilderStore((state) => state.updateForm);
 
   // Track which element is actively being dragged for the overlay
   const [activeElement, setActiveElement] = React.useState<FormElement | null>(null);
+
+  // Inline form name editing state
+  const [isEditingName, setIsEditingName] = React.useState(false);
+  const [nameInput, setNameInput] = React.useState(form.formName);
+  const nameInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Sync nameInput when form.formName changes externally
+  React.useEffect(() => {
+    if (!isEditingName) {
+      setNameInput(form.formName);
+    }
+  }, [form.formName, isEditingName]);
+
+  const handleNameClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setNameInput(form.formName);
+    setIsEditingName(true);
+    setTimeout(() => nameInputRef.current?.select(), 0);
+  };
+
+  const commitName = () => {
+    const trimmed = nameInput.trim();
+    if (trimmed && trimmed !== form.formName) {
+      updateForm({ formName: trimmed });
+    } else {
+      setNameInput(form.formName);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      commitName();
+    } else if (e.key === "Escape") {
+      setNameInput(form.formName);
+      setIsEditingName(false);
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -88,11 +128,44 @@ export function FormPreview() {
   return (
     <div className="flex h-full flex-col">
       {/* Preview Header */}
-      <div className="border-b px-6 py-4">
-        <h2 className="text-sm font-semibold">Preview</h2>
-        <p className="text-xs text-muted-foreground">
-          Build and preview your form.
-        </p>
+      <div className="border-b px-4 py-3 sm:px-6 sm:py-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold">Preview</h2>
+            <p className="text-xs text-muted-foreground">
+              Build and preview your form.
+            </p>
+          </div>
+
+          <div className="min-w-0 text-right">
+            {isEditingName ? (
+              <input
+                ref={nameInputRef}
+                autoFocus
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                onBlur={commitName}
+                onKeyDown={handleNameKeyDown}
+                onClick={(e) => e.stopPropagation()}
+                className="w-40 border-b-2 border-primary bg-transparent text-right text-lg font-semibold outline-none sm:w-56 sm:text-xl"
+              />
+            ) : (
+              <h1
+                className="group/title flex max-w-56 cursor-text items-center justify-end truncate text-lg font-semibold tracking-tight sm:max-w-md sm:text-xl"
+                onClick={handleNameClick}
+                title="Click to rename"
+              >
+                <span className="truncate">{nameInput}</span>
+                <span className="shrink-0 text-muted-foreground/60">
+                  .tsx
+                </span>
+                <Edit className="w-4 h-4" />
+              </h1>
+            )}
+          </div>
+        </div>
+
+
       </div>
 
       {/* Preview Canvas */}
@@ -103,14 +176,7 @@ export function FormPreview() {
         <div className="mx-auto min-h-full w-full max-w-2xl">
           <div className="rounded-xl border bg-background p-6 shadow-sm">
             {/* Form Header */}
-            <div className="mb-8 space-y-2">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {form.formName}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Build your form using the fields from the left panel.
-              </p>
-            </div>
+
 
             {/* Form Elements */}
             {form.formElements.length === 0 ? (

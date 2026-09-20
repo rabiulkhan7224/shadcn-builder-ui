@@ -8,7 +8,7 @@ This document tracks the implementation progress of **Shadcn Builder UI**, loggi
 
 - **Architecture & Foundations**: Complete (discriminated schemas, Zustand store with persistence, 3-panel layout).
 - **Form Elements & Renderers**: 18 of 18 core field renderers completed and verified in browser.
-- **Current Milestone**: **Field Editor (Inspector Panel)** for real-time field configuration.
+- **Current Milestone**: **Code Generation Engine** — generating type-safe React/RHF/Zod code from builder JSON.
 
 ---
 
@@ -63,55 +63,44 @@ This document tracks the implementation progress of **Shadcn Builder UI**, loggi
 
 ## 📋 Actionable Next Steps (`[ ]` Checklist)
 
-### Immediate Next (Active Task)
-- [ ] **Field Editor (`FieldEditor.tsx`)**:
-  - [ ] Create `components/ui/tabs.tsx` for clean property tab navigation.
-  - [ ] Empty state when no field is selected ("Select a field from canvas to edit").
-  - [ ] Element Header (Field type badge, element UUID, quick delete/duplicate/close).
-  - [ ] **General Tab**:
-    - [ ] Label input
-    - [ ] Field Name / Key input
-    - [ ] Placeholder input
-    - [ ] Description / Helper text input
-  - [ ] **Validation Tab**:
-    - [ ] Required toggle
-    - [ ] Min length & Max length (for text/password/textarea)
-    - [ ] Min value & Max value (for number/slider)
-    - [ ] Step value (for slider)
-    - [ ] Max selected count (for multi-select)
-    - [ ] Date format string (for date-picker)
-  - [ ] **Options Tab** (for Select, MultiSelect, RadioGroup, ToggleGroup):
-    - [ ] List current options with label & value inputs
-    - [ ] "+ Add Option" action
-    - [ ] Remove option action
-    - [ ] Option disabled toggle
-  - [ ] **Static Content Tab** (for H1, H2, H3, FieldDescription, FieldLegend):
-    - [ ] Text content editor
-  - [ ] **Behavior & Style Tab**:
-    - [ ] Disabled toggle
-    - [ ] Custom `className` input
-    - [ ] Rows count (for Textarea)
-    - [ ] Orientation toggle (vertical / horizontal for RadioGroup)
-    - [ ] Selection mode (single / multiple for ToggleGroup)
+### ✅ Completed (This Session)
+- [x] **Field Editor (`FieldEditor.tsx`)** — full property inspector:
+  - [x] `components/ui/tabs.tsx` shadcn Tabs primitive created.
+  - [x] Empty state when no field is selected.
+  - [x] Element Header (type badge, name, duplicate/delete/close buttons).
+  - [x] **General Tab**: Label, Field Name/Key, Input Sub-type, Placeholder, Helper Description, Disabled toggle.
+  - [x] **Validation Tab**: Required switch, Min/Max character lengths, Slider bounds/step, MultiSelect max count, DatePicker format string.
+  - [x] **Options Tab** (Select, MultiSelect, RadioGroup, ToggleGroup): Add/remove/edit options, disabled per-option toggle.
+  - [x] **Behavior Tab** (other fields): Textarea rows, RadioGroup orientation, ToggleGroup single/multiple mode, custom className.
+  - [x] **Static Content Editor** (H1-H3, FieldDescription, FieldLegend): Direct content text editing.
+  - [x] Live reactive updates via `updateElement` → Zustand → canvas re-render.
+
+- [x] **Drag & Drop Integration (`@dnd-kit/core`, `@dnd-kit/sortable`)**:
+  - [x] Installed `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/modifiers`, `@dnd-kit/utilities`.
+  - [x] `DndContext` + `SortableContext` wrapping canvas in `FormPreview`.
+  - [x] `useSortable` hook in `BuilderElement` — drag handle connected to sortable attributes/listeners.
+  - [x] `DragOverlay` showing a live ghost element while dragging.
+  - [x] `restrictToVerticalAxis` + `restrictToWindowEdges` modifiers.
+  - [x] 8px activation distance to prevent accidental drags on click.
+  - [x] On drag end → `moveElement(fromIndex, toIndex)` in Zustand store.
+  - [x] Auto re-selection of moved element after drop.
 
 ---
 
 ### Upcoming Milestones
 
-#### Phase 2: Drag & Drop Integration (`dnd-kit`)
-- [ ] Install / verify `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`.
-- [ ] Wrap `FormPreview` with `DndContext` and `SortableContext`.
-- [ ] Wrap `BuilderElement` with `SortableBuilderElement`.
-- [ ] Connect drag handles to sortable listeners and attributes.
-- [ ] Implement palette-to-canvas dragging from `FieldsPanel`.
-- [ ] Add visual insertion indicator lines for drop targets.
+#### Phase 3: Code Generation Engine (Next Priority)
+- [ ] Implement `generateZodSchema(elements)` → stringified Zod schema code.
+- [ ] Implement React Hook Form generator (with `<FormField>`, `<FormItem>`, `<FormMessage>`).
+- [ ] Implement TanStack Form code generator.
+- [ ] Package manager install commands generator (`pnpm`, `npm`, `yarn`, `bun`).
+- [ ] Code preview panel with syntax highlighting and copy-to-clipboard.
 
-#### Phase 3: Code Generation Engine
-- [ ] Implement `generateZodSchema(formElements)` returning stringified Zod schema.
-- [ ] Implement React Hook Form generator (`react-hook-form` + `shadcn/ui` output).
-- [ ] Implement TanStack Form generator (`@tanstack/react-form` output).
-- [ ] Package manager installation instructions generator (`pnpm`, `npm`, `yarn`, `bun`).
-- [ ] Code preview drawer / modal with copy-to-clipboard and syntax highlighting.
+#### Phase 4: Runtime Form Engine (`DynamicForm`)
+- [ ] Create standalone `DynamicForm` component taking `FormBuilder` JSON.
+- [ ] Live form preview toggle in builder header (Canvas vs Live Test mode).
+- [ ] Submission handling and validation feedback execution.
+- [ ] Submit button customization (label, variant, loading text).
 
 #### Phase 4: Runtime Form Engine (`DynamicForm`)
 - [ ] Create standalone `DynamicForm` component taking `FormBuilder` JSON.

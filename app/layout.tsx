@@ -46,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="">
         <Navbar />
-        <main className="flex flex-col items-center mt-24 gap-10 md:gap-36">
+        <main className="flex flex-col items-center  gap-10 md:gap-36">
           {children}
         </main>
       </body>

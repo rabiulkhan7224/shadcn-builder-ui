@@ -44,7 +44,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import type { FormElement, Option } from "@/lib/schema/form-builder.schema";
 
-const fieldTypeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+const fieldTypeIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   Input: Type,
   Password: KeyRound,
   OTP: Hash,
@@ -67,13 +70,13 @@ const fieldTypeIcons: Record<string, React.ComponentType<{ className?: string }>
 
 export function FieldEditor() {
   const selectedElementId = useFormBuilderStore(
-    (state) => state.selectedElementId
+    (state) => state.selectedElementId,
   );
   const formElements = useFormBuilderStore((state) => state.form.formElements);
   const updateElement = useFormBuilderStore((state) => state.updateElement);
   const removeElement = useFormBuilderStore((state) => state.removeElement);
   const duplicateElement = useFormBuilderStore(
-    (state) => state.duplicateElement
+    (state) => state.duplicateElement,
   );
   const selectElement = useFormBuilderStore((state) => state.selectElement);
 
@@ -82,7 +85,7 @@ export function FieldEditor() {
     if (!selectedElementId) return null;
     return (
       (formElements.find(
-        (el) => !Array.isArray(el) && el.id === selectedElementId
+        (el) => !Array.isArray(el) && el.id === selectedElementId,
       ) as FormElement | undefined) ?? null
     );
   }, [formElements, selectedElementId]);
@@ -119,6 +122,8 @@ export function FieldEditor() {
 
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
+      {/*  View generated code header */}
+
       {/* Editor Header */}
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-2">
@@ -195,10 +200,7 @@ export function FieldEditor() {
 
               {/* General Tab */}
               <TabsContent value="general" className="space-y-4">
-                <GeneralTab
-                  element={selectedElement}
-                  onUpdate={handleUpdate}
-                />
+                <GeneralTab element={selectedElement} onUpdate={handleUpdate} />
               </TabsContent>
 
               {/* Validation Tab */}
@@ -420,7 +422,9 @@ function ValidationTab({ element, onUpdate }: TabProps) {
               value={element.minLength ?? ""}
               onChange={(e) =>
                 onUpdate({
-                  minLength: e.target.value ? Number(e.target.value) : undefined,
+                  minLength: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
                 } as any)
               }
             />
@@ -436,7 +440,9 @@ function ValidationTab({ element, onUpdate }: TabProps) {
               value={element.maxLength ?? ""}
               onChange={(e) =>
                 onUpdate({
-                  maxLength: e.target.value ? Number(e.target.value) : undefined,
+                  maxLength: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
                 } as any)
               }
             />
@@ -499,7 +505,9 @@ function ValidationTab({ element, onUpdate }: TabProps) {
             value={element.maxSelected ?? ""}
             onChange={(e) =>
               onUpdate({
-                maxSelected: e.target.value ? Number(e.target.value) : undefined,
+                maxSelected: e.target.value
+                  ? Number(e.target.value)
+                  : undefined,
               } as any)
             }
             className="h-8 text-xs"
@@ -547,12 +555,9 @@ function OptionsTab({ element, onUpdate }: TabProps) {
     onUpdate({ options: newOptions } as any);
   };
 
-  const handleUpdateOption = (
-    index: number,
-    updates: Partial<Option>
-  ) => {
+  const handleUpdateOption = (index: number, updates: Partial<Option>) => {
     const newOptions = options.map((opt, i) =>
-      i === index ? { ...opt, ...updates } : opt
+      i === index ? { ...opt, ...updates } : opt,
     );
     onUpdate({ options: newOptions } as any);
   };
@@ -565,7 +570,9 @@ function OptionsTab({ element, onUpdate }: TabProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <Label className="text-xs font-medium">Choices ({options.length})</Label>
+        <Label className="text-xs font-medium">
+          Choices ({options.length})
+        </Label>
         <Button
           type="button"
           variant="outline"
@@ -658,9 +665,7 @@ function BehaviorTab({ element, onUpdate }: TabProps) {
             min={1}
             max={30}
             value={element.rows ?? 4}
-            onChange={(e) =>
-              onUpdate({ rows: Number(e.target.value) } as any)
-            }
+            onChange={(e) => onUpdate({ rows: Number(e.target.value) } as any)}
             className="h-8 text-xs"
           />
         </div>
@@ -698,7 +703,9 @@ function BehaviorTab({ element, onUpdate }: TabProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="single">Single (Radio style)</SelectItem>
-              <SelectItem value="multiple">Multiple (Checkbox style)</SelectItem>
+              <SelectItem value="multiple">
+                Multiple (Checkbox style)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
